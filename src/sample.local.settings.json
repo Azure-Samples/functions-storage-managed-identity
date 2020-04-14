@@ -1,0 +1,15 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+
+        // Uncomment these values if your account is associated w/ more than one subscription and/or tenant
+        //,"AZURE_TENANT_ID": "xxx-xxxxx-xxxx-xxx-xxxx",
+        //"AZURE_SUBSCRIPTION_ID": "yyy-yyyy-yyyyy-yyyy-yyyy"
+
+        // If you require local development from within the dev container, you'll need to set up a service principal in Azure, then fill in these values in addition to the tenant and subscription
+        //,"AZURE_CLIENT_ID": "zzz-zzzzz-zzzz-zzzzz-zzzz",
+        //"AZURE_CLIENT_SECRET": "ssss-sssss-sssss-sssss-sssss"
+    }
+}
