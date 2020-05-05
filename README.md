@@ -4,6 +4,7 @@ languages:
 - csharp
 - hcl
 products:
+- azure
 - dotnet
 - dotnet-core
 - azure-functions
