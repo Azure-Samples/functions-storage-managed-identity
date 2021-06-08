@@ -80,7 +80,8 @@ resource "azurerm_function_app" "fxn" {
   location                  = var.location
   resource_group_name       = var.resource_group_name
   app_service_plan_id       = azurerm_app_service_plan.fxnapp.id
-  storage_connection_string = azurerm_storage_account.fxnstor.primary_connection_string
+  storage_account_name       = azurerm_storage_account.fxnstor.name
+  storage_account_access_key = azurerm_storage_account.fxnstor.primary_access_key
   version                   = "~3"
   identity {
     type = "SystemAssigned"
