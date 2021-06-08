@@ -368,6 +368,9 @@ MigrationBackup/
 *.tfstate
 *.tfstate.*
 
+# terraform lock files
+**/*.terraform.lock*
+
 # Crash log files
 crash.log
 
