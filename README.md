@@ -22,6 +22,7 @@ This sample shows how to deploy your Azure Resources using [Terraform](https://t
 ## Running the sample
 
 ### Install prerequisites
+
 For ease of use, this sample includes a [Visual Studio Code Dev Container](https://code.visualstudio.com/docs/remote/containers) which you can build locally and run within, which provides all the tooling needed to build & deploy the included code. If you do not have VSCode, or wish to build & deploy without the use of containers, you need these pieces of software on your local machine:
 
 - [.Net Core 3.1 SDK](https://dotnet.microsoft.com/download)
@@ -35,7 +36,7 @@ Alternatively, [Visual Studio 2019](https://visualstudio.com) comes with both th
 
 To deploy the resources, perform the following commands at a command line:
 
-```
+```shell
 az login
 az account set --subscription <target subscription ID>
 cd terraform
@@ -46,7 +47,7 @@ Where `basename` and `resource_group_name` are required parameters, and `locatio
 
 Alternatively, you can create a `local.tfvars` file in the `/terraform` directory which looks like:
 
-```
+```hcl
 basename="fxnstormsisampsc2"
 resource_group_name="fxn-stor-msi-samp-scus2"
 location="South Central US"
@@ -68,19 +69,19 @@ You can now connect to the storage account _without the `fx` suffix_ where you w
 
 In the past, creating a solution like this would mean adding a `MyStorageConnectionString` application setting to your Azure Function which would contain the primary or secondary connection string of the target storage account. However you'll notice, if you observe the Function App you just deployed to Azure, there is no such connection string:
 
-![](doc/appsettings.png)
+![Application Settings on a Function App in Azure](doc/appsettings.png)
 
 > Note: The one connection string you _do_ see here is for the backend storage of your Azure Function, where its .zip package is uploaded when you publish
 
 This is because the permission and connectivity to the target storage account is controlled by the Identity and RBAC assignments in your associated Active Directory. You can see the identity of your Function by going to its 'Identity' area under 'Platform features':
 
-![](doc/platfeaturesidentity.png)
+![Location of 'Identity' option in a Function App's Platform Features area](doc/platfeaturesidentity.png)
 
-![](doc/identity.png)
+![Configuration of a Function App's Identity with Managed Identity](doc/identity.png)
 
 If you click the `Azure role assignments` button, you'll even see its assignment and permissions to the storage account:
 
-![](doc/roleassignments.png)
+![Role Assignments to the Function App](doc/roleassignments.png)
 
 These pieces together comprise the entirety of the scope of access your Function App has to the Storage Account. In the past, when we used Connection Strings, it gave the Function app *total control* over the storage account. Using RBAC allows finer-grained control over what the Function App can do. Additionally, if we roll the keys on the storage account, we need not restart the Function App to start using the new keys as we would in the past (as we'd have had to update the connection string or the value in KeyVault if using a KeyVault App Setting reference). Rolling keys, however, would immediately negate any and all SAS URLs this Function generates.
 
@@ -90,13 +91,13 @@ These pieces together comprise the entirety of the scope of access your Function
 
 At the command line, run the following:
 
-```
+```shell
 curl --location --request GET 'https://fxnxxxxxx.azurewebsites.net/api/GetSASUrl?code=3TR6xxxxxx&blobUri=https://fxxxx.blob.core.windows.net/sample/my.file'
 ```
 
 Where the URL is what your function app showed for its HTTP Trigger value after it deployed. If you missed this, you can get it from the portal here:
 
-![](doc/getsasurl.png)
+![Location of 'Get function URL' in Azure](doc/getsasurl.png)
 
 Then, add a new URL parameter `blobUri` that is the full http URL to your target blob. It will look something like this:
 
@@ -104,7 +105,7 @@ Then, add a new URL parameter `blobUri` that is the full http URL to your target
 
 **Response**
 
-```
+```text
 https://fxn_____.blob.core.windows.net/sample/my.file?skoid=......pxLSpVwuML%2B3UXrxBmC6XGA%3D
 ```
 
@@ -114,11 +115,11 @@ You can paste this URL right into an InPrivate browser; you'll be able to downlo
 
 Sometimes, when interacting with 3rd party SDKs in particular, you must instead give it the account key for a storage account. In this case it's useful for the Function to be able to obtain & return the fully account key for a storage account. You can test this with the following call to your function:
 
-```
+```text
 curl --location --request GET 'https://fxnxxxxxxx.azurewebsites.net/api/GetAccountKeys?code=GKUxxxxxxxx&accountName=fxnxxxx'
 ```
 
-where the `accountName` URL parameter is the name of the target storage account you created. This should be equivalent to the `basename` variable you passed to Terraform. 
+where the `accountName` URL parameter is the name of the target storage account you created. This should be equivalent to the `basename` variable you passed to Terraform.
 
 The response will look like:
 
@@ -141,15 +142,15 @@ The response will look like:
 
 As part of normal security protocol, it's common to regenerate the keys for storage accounts. Additionally, being able to do this if you detect a breach of security is vitally important.
 
-In this deployment, it's easy to do. 
+In this deployment, it's easy to do.
 
 First, open the Access Keys pane of the target storage account, so you can see the value before & after this call
 
-![](doc/storageacctkeys.png)
+![Storage account keys in Azure](doc/storageacctkeys.png)
 
 Now, make the following call to your function:
 
-```
+```text
 curl --location --request POST 'https://fxnxxxxxx.azurewebsites.net/api/RegenerateKey?code=9OZxxxxx&accountName=fxnstormsisampsc&keyName=key2'
 ```
 
