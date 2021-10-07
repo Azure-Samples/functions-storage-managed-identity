@@ -113,7 +113,7 @@ You can paste this URL right into an InPrivate browser; you'll be able to downlo
 
 #### Get the Account Keys for storage
 
-Sometimes, when interacting with 3rd party SDKs in particular, you must instead give it the account key for a storage account. In this case it's useful for the Function to be able to obtain & return the fully account key for a storage account. You can test this with the following call to your function:
+Sometimes, when interacting with 3rd party SDKs in particular, you must instead give it the account key for a storage account. In this case it's useful for the Function to be able to obtain & return the full account key for a storage account. You can test this with the following call to your function:
 
 ```text
 curl --location --request GET 'https://fxnxxxxxxx.azurewebsites.net/api/GetAccountKeys?code=GKUxxxxxxxx&accountName=fxnxxxx'
