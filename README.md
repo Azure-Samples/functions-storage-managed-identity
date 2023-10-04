@@ -6,7 +6,6 @@ languages:
 products:
 - azure
 - dotnet
-- dotnet-core
 - azure-functions
 - azure-storage
 - azure-blob-storage
